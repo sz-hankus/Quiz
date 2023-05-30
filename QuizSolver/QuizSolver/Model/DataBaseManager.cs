@@ -1,82 +1,137 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Collections.ObjectModel;
+using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
 
-namespace QuizSolver.Model
+namespace QuizCreator.Model
 {
-    public class DataBaseManager
+    public static class DataBaseManager
     {
 
-            SQLiteConnection dbConnection;
-            SQLiteCommand command;
-            string sqlCommand;
-            string dbPath = System.Environment.CurrentDirectory + "\\DB";
-            string dbFilePath;
-            public void createDbFile()
+        static SQLiteConnection CreateConnection(String path)
+        {
+            SQLiteConnection sqlite_conn;
+            sqlite_conn = new SQLiteConnection($"Data Source={path};");
+            sqlite_conn.Open();
+            return sqlite_conn;
+        }
+        private static int ExecuteNonQuery(SQLiteConnection sqlite_conn, String commandText) 
+        {
+            SQLiteCommand command = sqlite_conn.CreateCommand();
+            command.CommandText = commandText;
+            return command.ExecuteNonQuery();
+        }
+
+        private static void InsertQuestion(SQLiteConnection sqlite_conn, Question question) 
+        {
+            SQLiteCommand insertQuery = new SQLiteCommand("INSERT INTO Questions VALUES (@number, @contents)", sqlite_conn);
+            insertQuery.Parameters.Add("@number", DbType.Int32).Value = question.Number;
+            insertQuery.Parameters.Add("@contents", DbType.String).Value = question.QuestionContents;
+            insertQuery.ExecuteNonQuery();
+        }
+
+        private static void InsertQuestionAnswers(SQLiteConnection sqlite_conn, Question question)
+        {
+            foreach (Answer answer in question.Answers)
             {
-                if (!string.IsNullOrEmpty(dbPath) && !Directory.Exists(dbPath))
-                    Directory.CreateDirectory(dbPath);
-                dbFilePath = dbPath + "\\yourDb.db";
-                if (!System.IO.File.Exists(dbFilePath))
+                SQLiteCommand insertQuery = new SQLiteCommand("INSERT INTO Answers VALUES (@question_number, @number, @contents, @correct)", sqlite_conn);
+                insertQuery.Parameters.Add("@question_number", DbType.Int32).Value = question.Number;
+                insertQuery.Parameters.Add("@number", DbType.Int32).Value = answer.Number;
+                insertQuery.Parameters.Add("@contents", DbType.String).Value = answer.Contents;
+                insertQuery.Parameters.Add("@correct", DbType.Boolean).Value = answer.Correct;
+                insertQuery.ExecuteNonQuery();
+            }
+        }
+
+        public static void SaveQuizToDB(Quiz quiz, String path)
+        {
+            using (var connection = new SQLiteConnection($"Data Source={path}"))
+            {
+                connection.Open();
+
+                ExecuteNonQuery(connection, "DROP TABLE IF EXISTS Questions;");
+                ExecuteNonQuery(connection, "DROP TABLE IF EXISTS Answers;");
+
+                ExecuteNonQuery(connection, "CREATE TABLE Questions (number INT PRIMARY KEY, contents TEXT);");
+                ExecuteNonQuery(connection, "CREATE TABLE Answers (question_number INT, number INT, contents TEXT, correct INT);");
+                
+                foreach (Question question in quiz.Questions)
                 {
-                    SQLiteConnection.CreateFile(dbFilePath);
+                    InsertQuestion(connection, question);
+                    InsertQuestionAnswers(connection, question);
+                }
+                
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM ANSWERS;";
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int questionNumber = reader.GetInt32(0);
+                        int number = reader.GetInt32(1);
+                        String contents = reader.GetString(2);
+                        bool correct = reader.GetBoolean(3);
+
+                        Debug.WriteLine($"{questionNumber}, {number}, {contents}, {correct}");
+                    }
+                }
+            }
+        }
+        
+        private static List<Answer> GetQuestionAnswers(SQLiteConnection sqlite_conn, int questionNumber)
+        {
+            List<Answer> answers = new List<Answer>();
+            SQLiteCommand selectQuery = new SQLiteCommand(
+                "SELECT Answers.number, Answers.contents, correct " +
+                "FROM Questions INNER JOIN Answers ON Questions.number = Answers.question_number " +
+                "WHERE question_number = @question_number " +
+                "ORDER BY Answers.number", sqlite_conn);
+
+            selectQuery.Parameters.Add("@question_number", DbType.Int32).Value = questionNumber;
+
+            using (var reader = selectQuery.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    int number = reader.GetInt32(0);
+                    String contents = reader.GetString(1);
+                    bool correct = reader.GetBoolean(2);
+                    
+                    answers.Add(new Answer(number, contents, correct));
                 }
             }
 
-            public string createDbConnection()
-            {
-                string strCon = string.Format("Data Source={0};", dbFilePath);
-                dbConnection = new SQLiteConnection(strCon);
-                dbConnection.Open();
-                command = dbConnection.CreateCommand();
-                return strCon;
-            }
+            return answers;
+        }
 
-            public void createTables()
+        public static Quiz ReadQuizFromDB(String path)
+        {
+            Quiz newQuiz = new Quiz();
+            newQuiz.Name = Path.GetFileNameWithoutExtension(path);
+
+            using (var connection = new SQLiteConnection($"Data Source={path}"))
             {
-                if (!checkIfExist("MY_TABLE"))
+                connection.Open();
+
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM Questions ORDER BY number";
+
+                using (var reader = command.ExecuteReader())
                 {
-                    sqlCommand = "CREATE TABLE MY_TBALE(idnt_test INTEGER PRIMARY KEY AUTOINCREMENT,code_test_type INTEGER";
-                    executeQuery(sqlCommand);
-                }
-
-            }
-
-            public bool checkIfExist(string tableName)
-            {
-                command.CommandText = "SELECT name FROM sqlite_master WHERE name='" + tableName + "'";
-                var result = command.ExecuteScalar();
-
-                return result != null && result.ToString() == tableName ? true : false;
-            }
-
-            public void executeQuery(string sqlCommand)
-            {
-                SQLiteCommand triggerCommand = dbConnection.CreateCommand();
-                triggerCommand.CommandText = sqlCommand;
-                triggerCommand.ExecuteNonQuery();
-            }
-
-            public bool checkIfTableContainsData(string tableName)
-            {
-                command.CommandText = "SELECT count(*) FROM " + tableName;
-                var result = command.ExecuteScalar();
-
-                return Convert.ToInt32(result) > 0 ? true : false;
-            }
-
-
-            public void fillTable()
-            {
-                if (!checkIfTableContainsData("MY_TABLE"))
-                {
-                    sqlCommand = "insert into MY_TABLE (code_test_type) values (999)";
-                    executeQuery(sqlCommand);
+                    while (reader.Read())
+                    {
+                        int questionNumber = reader.GetInt32(0);
+                        String contents = reader.GetString(1);
+                        List<Answer> answers = GetQuestionAnswers(connection, questionNumber);
+                        newQuiz.Questions.Add(new Question(questionNumber, contents, new ObservableCollection<Answer>(answers)));
+                    }
                 }
             }
+
+            return newQuiz;
+        }
     }
 }
