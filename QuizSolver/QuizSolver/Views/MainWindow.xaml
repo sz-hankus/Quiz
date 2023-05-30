@@ -1,0 +1,25 @@
+﻿<Window x:Class="Quiz.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Quiz"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="193" Width="200">
+    <!--<Window.DataContext>
+        <local:MainWindowVM/>
+    </Window.DataContext>-->
+
+    <Grid ShowGridLines="False">
+
+        <Border Grid.Row="0" Background="LightGray"/>
+        <StackPanel VerticalAlignment="Center" Height="122">
+            <TextBox FontSize="20" VerticalAlignment="Top" HorizontalAlignment="Center" RenderTransformOrigin="1.033,0.639" 
+                     Text="Quiz Solver" IsReadOnly="True" Width="106" BorderBrush="#FF1C4EE5" Background="#FFB5EEFB" Margin="10"/>
+            <Button Content="Open Quiz" Width="106" Command="{Binding OpenCommand}" Margin="5"/>
+            <Button Content="Quit" Width="106" Command="{Binding QuitCommand}" Margin="5"/>
+        </StackPanel>
+
+    </Grid>
+</Window>
+
