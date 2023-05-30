@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Quiz
+namespace QuizSolver
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quiz.Model
+namespace QuizSolver.Model
 {
     public class Question : INotifyPropertyChanged
     {

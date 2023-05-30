@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quiz.Model
+namespace QuizSolver.Model
 {
     public class DataBaseManager
     {

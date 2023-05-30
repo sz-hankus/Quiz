@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{287011BD-ED52-4004-8E65-7E629E5D940E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>testWPF</RootNamespace>
-    <AssemblyName>testWPF</AssemblyName>
+    <RootNamespace>QuizSolver</RootNamespace>
+    <AssemblyName>QuizSolver</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -90,7 +90,7 @@
     <Compile Include="BasicCommand.cs" />
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\DataBaseManager.cs" />
-    <Compile Include="QuizViewVM.cs" />
+    <Compile Include="ViewModels\QuizViewVM.cs" />
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -109,7 +109,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindowVM.cs" />
+    <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="Model\Question.cs" />
     <Compile Include="Model\Quiz.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

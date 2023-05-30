@@ -6,10 +6,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
-using Quiz.Model;
+using QuizSolver.Model;
 using System.Runtime.CompilerServices;
 
-namespace Quiz
+namespace QuizSolver
 {
     public class MainWindowVM : INotifyPropertyChanged
     {

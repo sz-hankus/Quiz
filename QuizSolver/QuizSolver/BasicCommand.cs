@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Quiz
+namespace QuizSolver
 {
     public class BasicCommand : ICommand
     {

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Quiz.Model
+namespace QuizSolver.Model
 {
     public class Answer : INotifyPropertyChanged
     {

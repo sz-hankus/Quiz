@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Quiz.Model;
+using QuizSolver.Model;
 
-namespace Quiz
+namespace QuizSolver
 {
     public class QuizViewVM
     {
