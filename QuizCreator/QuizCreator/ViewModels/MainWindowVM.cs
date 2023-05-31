@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Input;
 using QuizCreator.Model;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace QuizCreator
 {
@@ -112,7 +113,14 @@ namespace QuizCreator
                 return;
 
             // PASS THE QUIZ AND SAVE TO DB HERE
-            Quiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
+            try
+            {
+                Quiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
+            }
+            catch (System.Exception)
+            {
+                MessageBox.Show($"Unable to load a quiz from {openFileDialog.FileName}", "Loading error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
