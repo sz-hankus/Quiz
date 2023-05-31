@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizSolver.Model
 {
@@ -26,6 +22,11 @@ namespace QuizSolver.Model
             Number = number;
             QuestionContents = questionContents;
             Answers = answers;
+        }
+
+        public Question Copy()
+        {
+            return new Question(Number, QuestionContents, new ObservableCollection<Answer>(answers));
         }
 
         public int Number 

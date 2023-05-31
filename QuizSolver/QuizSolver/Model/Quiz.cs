@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuizSolver.Model
 {
@@ -15,6 +11,12 @@ namespace QuizSolver.Model
 		private ObservableCollection<Question> questions;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+		public Quiz()
+		{
+			Name = "";
+			questions = new ObservableCollection<Question>();
+		}
 
         public Quiz(String name, ObservableCollection<Question> questions)
 		{

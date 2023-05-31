@@ -6,7 +6,7 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 
-namespace QuizCreator.Model
+namespace QuizSolver.Model
 {
     public static class DataBaseManager
     {
