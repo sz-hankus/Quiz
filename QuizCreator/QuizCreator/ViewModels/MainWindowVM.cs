@@ -43,7 +43,7 @@ namespace QuizCreator
             AddCommand = new BasicCommand(this.AddQuestion);
             DeleteCommand = new BasicCommand(this.DeleteQuestion);
             ModifyCommand = new BasicCommand(this.ModifyQuestion);
-            SaveCommand = new BasicCommand(this.SaveQuiz);
+            SaveCommand = new BasicCommand(this.SaveQuiz);  
             LoadCommand = new BasicCommand(this.LoadQuiz);
         }
 
@@ -101,7 +101,6 @@ namespace QuizCreator
             if (openFileDialog.ShowDialog() != true)
                 return;
 
-            // PASS THE QUIZ AND SAVE TO DB HERE
             Model.DataBaseManager.SaveQuizToDB(Quiz, openFileDialog.FileName);
         }
 
@@ -112,7 +111,6 @@ namespace QuizCreator
             if (openFileDialog.ShowDialog() != true)
                 return;
 
-            // PASS THE QUIZ AND SAVE TO DB HERE
             try
             {
                 Quiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);

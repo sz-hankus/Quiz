@@ -12,7 +12,12 @@ namespace QuizSolver.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-		public Quiz()
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public Quiz()
 		{
 			Name = "";
 			questions = new ObservableCollection<Question>();
@@ -43,11 +48,5 @@ namespace QuizSolver.Model
 				OnPropertyChanged();
 			}
 		}
-
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
     }
 }

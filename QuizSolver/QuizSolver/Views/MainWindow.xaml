@@ -6,14 +6,14 @@
         xmlns:local="clr-namespace:QuizSolver"
         mc:Ignorable="d"
         Title="MainWindow" Height="300" Width="300">
-    <!--<Window.DataContext>
+    <Window.DataContext>
         <local:MainWindowVM/>
-    </Window.DataContext>-->
+    </Window.DataContext>
 
     <Grid ShowGridLines="False">
 
         <Border Grid.Row="0" Background="LightGray"/>
-        <StackPanel VerticalAlignment="Center" Height="122">
+        <StackPanel VerticalAlignment="Center">
             <TextBlock FontSize="20" TextAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Center" Text="Quiz Solver" Width="110" Background="#FFB5EEFB" Margin="10"/>
             <Button Content="Open Quiz" Width="106" Command="{Binding OpenCommand}" Margin="5"/>
             <Button Content="Quit" Width="106" Command="{Binding QuitCommand}" Margin="5"/>

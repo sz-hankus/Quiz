@@ -91,6 +91,9 @@
     <Compile Include="Model\Answer.cs" />
     <Compile Include="Model\DataBaseManager.cs" />
     <Compile Include="ViewModels\QuizViewVM.cs" />
+    <Compile Include="Views\QuizView.xaml.cs">
+      <DependentUpon>QuizView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

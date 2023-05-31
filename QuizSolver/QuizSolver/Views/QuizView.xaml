@@ -9,6 +9,7 @@
     <!--<Window.DataContext>
         <local:QuizViewVM/>
     </Window.DataContext>-->
+    
     <Grid ShowGridLines="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80*"></ColumnDefinition>
@@ -21,9 +22,14 @@
                 <RowDefinition Height="80*"></RowDefinition>
             </Grid.RowDefinitions>
             <!--Question contents-->
-            <TextBox Grid.Row="0" FontSize="20" HorizontalAlignment="Center" Text="{Binding Contents}" VerticalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Grid.Row="0" FontSize="20" HorizontalAlignment="Center" Text="{Binding CurrentQuesiton.Number}" VerticalAlignment="Center" Margin="10"/>
+                <TextBlock Grid.Row="0" FontSize="20" HorizontalAlignment="Center" Text="{Binding CurrentQuesiton.QuestionContents}" VerticalAlignment="Center"/>
+            </StackPanel>
+            <DockPanel>
+                </DockPanel>
             <!--Answer List-->
-            <ListBox Name="AnswersListBox" Grid.Row="1" ItemsSource="{Binding Answers}">
+            <ListBox Name="AnswersListBox" Grid.Row="1" ItemsSource="{Binding CurrentQuesiton.Answers}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
@@ -35,13 +41,17 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
-        <StackPanel Grid.Column="1" VerticalAlignment="Center" >
-            <Button Content="Begin" Grid.Column="2" Command="{Binding BeginCommand}" HorizontalAlignment="Center" Margin="5"/>
-            <Button Content="Finish" Grid.Column="2" Command="{Binding FinishCommand}" CommandParameter="{Binding ElementName=AnswersListBox, Path=SelectedIndex}" HorizontalAlignment="Center" Margin="5"/>
-
-        </StackPanel>
-        <CheckBox Content="CheckBox" HorizontalAlignment="Left" Margin="326,195,0,0" VerticalAlignment="Top"/>
-
-
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*"></RowDefinition>
+                <RowDefinition Height="80*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="{Binding Progress}" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+            <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                <Button Content="Next" Grid.Column="2" Command="{Binding NextCommand}" HorizontalAlignment="Center" Margin="5"/>
+                <Button Content="Previous" Grid.Column="2" Command="{Binding PreviousCommand}" HorizontalAlignment="Center" Margin="5"/>
+            </StackPanel>
+        </Grid>
+        
     </Grid>
 </Window>

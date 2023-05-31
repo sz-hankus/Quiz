@@ -49,23 +49,18 @@ namespace QuizSolver
 
         }
 
-
-        // TODO: maybe implement an interface for commands without arguments?
-
         private void OpenExplorer(object ignorethis)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true) { 
-                // RODO: implement file reading
-            }
+            openFileDialog.CheckFileExists = true;
+            if (openFileDialog.ShowDialog() != true)
+                return;
 
-            QuizViewVM QuizViewVM = new QuizViewVM(new Model.Quiz("bl", new ObservableCollection<Question>()));
-            //QuizView QuizView = new Model.QuizView(QuizViewVM);
-            //if (QuizView.ShowDialog() == true)
-            //{
-            //    Question output = new Question(selected.Number, QuizViewVM.Contents, QuizViewVM.Answers);
-            //    Quiz.Questions[(int)index] = output;
-            //}
+            Model.Quiz loadedQuiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
+
+            QuizViewVM quizViewVM = new QuizViewVM(loadedQuiz);
+            QuizView quizView = new QuizView(quizViewVM);
+            quizView.Show();
         }
 
         private void QuitApplication(object ignorethis)
