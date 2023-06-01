@@ -26,8 +26,12 @@ namespace QuizSolver.Model
 
         public Question Copy()
         {
-            //new ObservableCollection<Answer>(answers)
-            return new Question(Number, QuestionContents, answers);
+            ObservableCollection<Answer> answersCopy = new ObservableCollection<Answer>();
+            foreach(Answer answer in answers)
+            {
+                answersCopy.Add(answer.Copy());
+            }
+            return new Question(Number, QuestionContents, answersCopy);
         }
 
         public int Number 

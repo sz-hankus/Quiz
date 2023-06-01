@@ -31,8 +31,14 @@ namespace QuizSolver.Model
 
 		public Quiz Copy()
 		{
-			//new ObservableCollection<Question>(questions)
-			return new Quiz(Name, Questions);
+			ObservableCollection<Question> questionsCopy = new ObservableCollection<Question>();
+
+			foreach (Question question in questions)
+            {
+				questionsCopy.Add(question.Copy());
+            }
+			return new Quiz(Name, questionsCopy);
+
 		}
 
 		public String Name

@@ -74,9 +74,7 @@ namespace QuizSolver
 
             this.quiz = quiz;
             this.correctQuiz = quiz.Copy();
-            MessageBox.Show($"Poprawna odpowiedz w pierwszym bezposrednio po utworzeniu VM: \n {correctQuiz.Questions[0].Answers[1].Correct.ToString()}");  // delete later
             this.WipeAnswers();
-            MessageBox.Show($"Poprawna odpowiedz po wipe answers: \n {correctQuiz.Questions[0].Answers[1].Correct.ToString()}"); // delete later
             this.currentQuestion = quiz.Questions[0];
             this.currentIndex = 0;
             NextCommand = new BasicCommand(GoToNextQuestion, IsNotAtEnd);
@@ -101,9 +99,6 @@ namespace QuizSolver
         private void FinishQuiz(object ignorethis)
         {
             MessageBox.Show(AssessQuiz().ToString());
-            MessageBox.Show(quiz.Questions[0].Answers[1].Correct.ToString());
-            MessageBox.Show(correctQuiz.Questions[0].Answers[1].Correct.ToString());
-
             OnPropertyChanged("Finish");
         }
         private int AssessQuiz()
