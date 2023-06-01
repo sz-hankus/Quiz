@@ -26,7 +26,8 @@ namespace QuizSolver.Model
 
         public Question Copy()
         {
-            return new Question(Number, QuestionContents, new ObservableCollection<Answer>(answers));
+            //new ObservableCollection<Answer>(answers)
+            return new Question(Number, QuestionContents, answers);
         }
 
         public int Number 
@@ -71,5 +72,16 @@ namespace QuizSolver.Model
             //{ String.Join(" ", answers.ToArray())}
             return $"{number}. {questionContents}";
 		}
+
+        public bool CompareAnswers(Question q)
+        {   
+            // Can be done simpler and cleaner
+            for( int i = 0; i < answers.Count; i++)
+            {
+                if (answers[i].Correct != q.answers[i].Correct)
+                    return false;
+            }
+            return true;
+        }
 	}
 }

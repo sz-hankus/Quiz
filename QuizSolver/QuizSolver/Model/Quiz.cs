@@ -23,10 +23,16 @@ namespace QuizSolver.Model
 			questions = new ObservableCollection<Question>();
 		}
 
-        public Quiz(String name, ObservableCollection<Question> questions)
+		public Quiz(String name, ObservableCollection<Question> questions)
 		{
 			Name = name;
 			Questions = questions;
+		}
+
+		public Quiz Copy()
+		{
+			//new ObservableCollection<Question>(questions)
+			return new Quiz(Name, Questions);
 		}
 
 		public String Name
