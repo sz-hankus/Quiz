@@ -26,7 +26,12 @@ namespace QuizCreator.Model
 
         public Question Copy()
         {
-            return new Question(Number, QuestionContents, new ObservableCollection<Answer>(answers));
+            ObservableCollection<Answer> answersCopy = new ObservableCollection<Answer>();
+            foreach(Answer answer in answers)
+            {
+                answersCopy.Add(answer.Copy());
+            }
+            return new Question(Number, QuestionContents, answersCopy);
         }
 
         public int Number 
@@ -71,5 +76,16 @@ namespace QuizCreator.Model
             //{ String.Join(" ", answers.ToArray())}
             return $"{number}. {questionContents}";
 		}
+
+        public bool CompareAnswers(Question q)
+        {   
+            // Can be done simpler and cleaner
+            for( int i = 0; i < answers.Count; i++)
+            {
+                if (answers[i].Correct != q.answers[i].Correct)
+                    return false;
+            }
+            return true;
+        }
 	}
 }

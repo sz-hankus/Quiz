@@ -12,16 +12,33 @@ namespace QuizCreator.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-		public Quiz()
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public Quiz()
 		{
 			Name = "";
 			questions = new ObservableCollection<Question>();
 		}
 
-        public Quiz(String name, ObservableCollection<Question> questions)
+		public Quiz(String name, ObservableCollection<Question> questions)
 		{
 			Name = name;
 			Questions = questions;
+		}
+
+		public Quiz Copy()
+		{
+			ObservableCollection<Question> questionsCopy = new ObservableCollection<Question>();
+
+			foreach (Question question in questions)
+            {
+				questionsCopy.Add(question.Copy());
+            }
+			return new Quiz(Name, questionsCopy);
+
 		}
 
 		public String Name
@@ -44,10 +61,26 @@ namespace QuizCreator.Model
 			}
 		}
 
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        public int AssessQuiz(Quiz other)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+			int correctAnswers = 0;
+			for (int i = 0; i < this.Questions.Count; i++)
+			{
+				if (this.Questions[i].CompareAnswers(other.Questions[i]))
+					correctAnswers++;
+			}
+			return correctAnswers;
+        }
+		public static int AssessQuiz(Quiz q1, Quiz q2)
+        {
+			int correctAnswers = 0;
+			for (int i = 0; i < q1.Questions.Count; i++)
+			{
+				if (q1.Questions[i].CompareAnswers(q2.Questions[i]))
+					correctAnswers++;
+			}
+			return correctAnswers;
         }
 
-    }
+	}
 }
