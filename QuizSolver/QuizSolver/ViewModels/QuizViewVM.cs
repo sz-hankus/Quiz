@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -16,6 +16,9 @@ namespace QuizSolver
     {
         private Model.Quiz quiz;
         private readonly Model.Quiz correctQuiz;
+        private readonly System.Windows.Threading.DispatcherTimer dispatcherTimer;
+        private int solvingTime;
+
 
         private Model.Question currentQuestion;
         private int currentIndex;
@@ -57,6 +60,11 @@ namespace QuizSolver
             get { return $"{CurrentQuesiton.Number} / {Quiz.Questions.Count}"; }
         }
 
+        public String Time
+        {
+            get { return solvingTime.ToString(); }
+        }
+
         public QuizViewVM()
         {
             this.quiz = new Quiz("Test", new ObservableCollection<Question> { new Question(1, "test question", new ObservableCollection<Answer>() { new Answer(1, "test answer 1", true)}) });
@@ -80,6 +88,18 @@ namespace QuizSolver
             NextCommand = new BasicCommand(GoToNextQuestion, IsNotAtEnd);
             PreviousCommand = new BasicCommand(GoToPreviousQuestion, IsNotAtStart);
             FinishCommand = new BasicCommand(FinishQuiz);
+
+            solvingTime = 0;
+            dispatcherTimer = new System.Windows.Threading.DispatcherTimer(System.Windows.Threading.DispatcherPriority.Send);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Tick += dispatcherTimer_Tick;
+            dispatcherTimer.Start();
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            solvingTime++;
+            OnPropertyChanged("Time");
         }
 
         private void GoToNextQuestion(object ignorethis)
@@ -98,18 +118,8 @@ namespace QuizSolver
 
         private void FinishQuiz(object ignorethis)
         {
-            MessageBox.Show(AssessQuiz().ToString());
+            MessageBox.Show(Quiz.AssessQuiz(quiz, correctQuiz).ToString());
             OnPropertyChanged("Finish");
-        }
-        private int AssessQuiz()
-        {
-            int correctAnswers = 0;
-            for(int i=0; i < quiz.Questions.LongCount(); i++)
-            {
-                if(quiz.Questions[i].CompareAnswers(correctQuiz.Questions[i]))
-                    correctAnswers++;
-            }
-            return correctAnswers;
         }
 
         private bool IsNotAtStart(object ignorethis)

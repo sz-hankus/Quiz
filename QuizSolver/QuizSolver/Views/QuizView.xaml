@@ -9,7 +9,7 @@
     <!--<Window.DataContext>
         <local:QuizViewVM/>
     </Window.DataContext>-->
-    
+
     <Grid ShowGridLines="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80*"></ColumnDefinition>
@@ -27,7 +27,7 @@
                 <TextBlock Grid.Row="0" FontSize="20" HorizontalAlignment="Center" Text="{Binding CurrentQuesiton.QuestionContents}" VerticalAlignment="Center"/>
             </StackPanel>
             <DockPanel>
-                </DockPanel>
+            </DockPanel>
             <!--Answer List-->
             <ListBox Name="AnswersListBox" Grid.Row="1" ItemsSource="{Binding CurrentQuesiton.Answers}">
                 <ListBox.ItemTemplate>
@@ -52,7 +52,9 @@
                 <Button Content="Previous" Grid.Column="2" Command="{Binding PreviousCommand}" HorizontalAlignment="Center" Margin="5"/>
                 <Button Content="Finish" Grid.Column="2" Command="{Binding FinishCommand}" HorizontalAlignment="Center" Margin="5" Background="#FFFF1C1C" BorderBrush="Black" FontWeight="Bold"/>
             </StackPanel>
+            <Label Content="Timer" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Margin="5" FontSize="24"/>
+            <Label Content="{Binding Time}" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Margin="10,46.6,8,0" FontSize="24"/>
         </Grid>
-        
+
     </Grid>
 </Window>
