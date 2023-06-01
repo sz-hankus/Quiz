@@ -34,7 +34,6 @@ namespace QuizSolver
 
         public ICommand FinishCommand { get; private set; }
 
-
         public Model.Quiz Quiz
         {
             get { return quiz; }
@@ -60,11 +59,11 @@ namespace QuizSolver
             get { return $"{CurrentQuesiton.Number} / {Quiz.Questions.Count}"; }
         }
 
+
         public String Time
         {
             get { return solvingTime.ToString(); }
         }
-
         public QuizViewVM()
         {
             this.quiz = new Quiz("Test", new ObservableCollection<Question> { new Question(1, "test question", new ObservableCollection<Answer>() { new Answer(1, "test answer 1", true)}) });
@@ -116,9 +115,13 @@ namespace QuizSolver
             OnPropertyChanged("Progress");
         }
 
-        private void FinishQuiz(object ignorethis)
+        private void FinishQuiz (object window)
         {
-            MessageBox.Show(Quiz.AssessQuiz(quiz, correctQuiz).ToString());
+            dispatcherTimer.Stop();
+            QuizReviewVM quizReviewVM = new QuizReviewVM(Quiz.AssessQuiz(quiz, correctQuiz), quiz.Questions.Count, solvingTime);
+            QuizReview quizReview = new QuizReview(quizReviewVM);
+            quizReview.Show();
+            ((Window) window).Close();
             OnPropertyChanged("Finish");
         }
 
