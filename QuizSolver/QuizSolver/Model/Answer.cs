@@ -21,6 +21,10 @@ namespace QuizSolver.Model
             Contents = contents;
             Correct = correct;
         }
+        public Answer Copy()
+        {
+            return new Answer(number, Contents, Correct);
+        }
 
         public int Number
         {
@@ -46,6 +50,17 @@ namespace QuizSolver.Model
             get { return correct; }
             set 
             {  
+                correct = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // implements default view of the answers in question
+        public Boolean Default
+        {
+            get { return correct; }
+            set
+            {
                 correct = value;
                 OnPropertyChanged();
             }
