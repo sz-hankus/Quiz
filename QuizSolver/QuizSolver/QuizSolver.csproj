@@ -90,8 +90,13 @@
     </ApplicationDefinition>
     <Compile Include="BasicCommand.cs" />
     <Compile Include="Model\Answer.cs" />
+    <Compile Include="Model\Cryptography.cs" />
     <Compile Include="Model\DataBaseManager.cs" />
+    <Compile Include="ViewModels\PasswordInputVM.cs" />
     <Compile Include="ViewModels\QuizViewVM.cs" />
+    <Compile Include="Views\PasswordInput.xaml.cs">
+      <DependentUpon>PasswordInput.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\QuizView.xaml.cs">
       <DependentUpon>QuizView.xaml</DependentUpon>
     </Compile>
@@ -107,6 +112,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\PasswordInput.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\QuizView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
