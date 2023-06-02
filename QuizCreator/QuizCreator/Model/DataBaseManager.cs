@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -72,7 +73,19 @@ namespace QuizCreator.Model
                 }
             }
         }
-        
+
+        public static void SaveQuizToEncryptedDB(Quiz quiz, String path, String password)
+        {
+            if (System.IO.File.Exists(path))
+                Model.Cryptography.DecryptFile(path, password);
+
+            Model.DataBaseManager.SaveQuizToDB(quiz, path);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Model.Cryptography.EncryptFile(path, password);
+
+        }
+
         private static List<Answer> GetQuestionAnswers(SQLiteConnection sqlite_conn, int questionNumber)
         {
             List<Answer> answers = new List<Answer>();
@@ -122,6 +135,18 @@ namespace QuizCreator.Model
                     }
                 }
             }
+
+            return newQuiz;
+        }
+
+        public static Quiz ReadQuizFromEncryptedDB(String path, String password)
+        {
+            Quiz newQuiz = new Quiz();
+            Model.Cryptography.DecryptFile(path, password);
+            newQuiz = Model.DataBaseManager.ReadQuizFromDB(path);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Model.Cryptography.EncryptFile(path, password);
 
             return newQuiz;
         }

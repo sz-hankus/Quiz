@@ -10,22 +10,14 @@ namespace QuizSolver.Model
 {
     public static class DataBaseManager
     {
-
-        static SQLiteConnection CreateConnection(String path)
-        {
-            SQLiteConnection sqlite_conn;
-            sqlite_conn = new SQLiteConnection($"Data Source={path};");
-            sqlite_conn.Open();
-            return sqlite_conn;
-        }
-        private static int ExecuteNonQuery(SQLiteConnection sqlite_conn, String commandText) 
+        private static int ExecuteNonQuery(SQLiteConnection sqlite_conn, String commandText)
         {
             SQLiteCommand command = sqlite_conn.CreateCommand();
             command.CommandText = commandText;
             return command.ExecuteNonQuery();
         }
 
-        private static void InsertQuestion(SQLiteConnection sqlite_conn, Question question) 
+        private static void InsertQuestion(SQLiteConnection sqlite_conn, Question question)
         {
             SQLiteCommand insertQuery = new SQLiteCommand("INSERT INTO Questions VALUES (@number, @contents)", sqlite_conn);
             insertQuery.Parameters.Add("@number", DbType.Int32).Value = question.Number;
@@ -57,13 +49,13 @@ namespace QuizSolver.Model
 
                 ExecuteNonQuery(connection, "CREATE TABLE Questions (number INT PRIMARY KEY, contents TEXT);");
                 ExecuteNonQuery(connection, "CREATE TABLE Answers (question_number INT, number INT, contents TEXT, correct INT);");
-                
+
                 foreach (Question question in quiz.Questions)
                 {
                     InsertQuestion(connection, question);
                     InsertQuestionAnswers(connection, question);
                 }
-                
+
                 var command = connection.CreateCommand();
                 command.CommandText = "SELECT * FROM ANSWERS;";
                 using (var reader = command.ExecuteReader())
@@ -80,7 +72,19 @@ namespace QuizSolver.Model
                 }
             }
         }
-        
+
+        public static void SaveQuizToEncryptedDB(Quiz quiz, String path, String password)
+        {
+            if (System.IO.File.Exists(path))
+                Model.Cryptography.DecryptFile(path, password);
+
+            Model.DataBaseManager.SaveQuizToDB(quiz, path);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Model.Cryptography.EncryptFile(path, password);
+
+        }
+
         private static List<Answer> GetQuestionAnswers(SQLiteConnection sqlite_conn, int questionNumber)
         {
             List<Answer> answers = new List<Answer>();
@@ -99,7 +103,7 @@ namespace QuizSolver.Model
                     int number = reader.GetInt32(0);
                     String contents = reader.GetString(1);
                     bool correct = reader.GetBoolean(2);
-                    
+
                     answers.Add(new Answer(number, contents, correct));
                 }
             }
@@ -130,6 +134,18 @@ namespace QuizSolver.Model
                     }
                 }
             }
+
+            return newQuiz;
+        }
+
+        public static Quiz ReadQuizFromEncryptedDB(String path, String password)
+        {
+            Quiz newQuiz = new Quiz();
+            Model.Cryptography.DecryptFile(path, password);
+            newQuiz = Model.DataBaseManager.ReadQuizFromDB(path);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Model.Cryptography.EncryptFile(path, password);
 
             return newQuiz;
         }

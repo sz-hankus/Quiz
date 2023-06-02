@@ -115,7 +115,7 @@ namespace QuizSolver
             OnPropertyChanged("Progress");
         }
 
-        private void FinishQuiz (object window)
+        private void FinishQuiz(object window)
         {
             dispatcherTimer.Stop();
             QuizReviewVM quizReviewVM = new QuizReviewVM(Quiz.AssessQuiz(quiz, correctQuiz), quiz.Questions.Count, solvingTime);

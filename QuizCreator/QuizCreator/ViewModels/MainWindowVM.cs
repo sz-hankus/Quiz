@@ -105,7 +105,6 @@ namespace QuizCreator
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "sqlite|*.sqlite";
             saveFileDialog.DefaultExt = "sqlite";
-            saveFileDialog.RestoreDirectory = true;
 
             saveFileDialog.FileName = $"{this.Quiz.Name}.sqlite";
             if (saveFileDialog.ShowDialog() != true)
@@ -119,19 +118,9 @@ namespace QuizCreator
             try
             {
                 if (passwordInputVM.Password == "")
-                {
                     Model.DataBaseManager.SaveQuizToDB(Quiz, saveFileDialog.FileName);
-                }
                 else
-                {
-                    if (System.IO.File.Exists(saveFileDialog.FileName))
-                        Model.Cryptography.DecryptFile(saveFileDialog.FileName, passwordInputVM.Password);
-
-                    Model.DataBaseManager.SaveQuizToDB(Quiz, saveFileDialog.FileName);
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    Model.Cryptography.EncryptFile(saveFileDialog.FileName, passwordInputVM.Password);
-                }
+                    Model.DataBaseManager.SaveQuizToEncryptedDB(Quiz, saveFileDialog.FileName, passwordInputVM.Password);    
             }
             catch (System.Exception ex)
             {
@@ -155,17 +144,9 @@ namespace QuizCreator
             try
             {
                 if (passwordInputVM.Password == "")
-                {
                     Quiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
-                }
                 else
-                {
-                    Model.Cryptography.DecryptFile(openFileDialog.FileName, passwordInputVM.Password);
-                    Quiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    Model.Cryptography.EncryptFile(openFileDialog.FileName, passwordInputVM.Password);
-                }
+                    Quiz = Model.DataBaseManager.ReadQuizFromEncryptedDB(openFileDialog.FileName, passwordInputVM.Password);
             }
             catch (System.Exception ex)
             {
