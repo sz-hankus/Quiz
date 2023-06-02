@@ -41,10 +41,15 @@ namespace QuizCreator
         {
             Quiz = new Model.Quiz("Title", new ObservableCollection<Question> { new Question(1, "New question", new ObservableCollection<Answer> { new Answer(1, "Correct answer", true), new Answer(2, "Incorrect answer", false) }) });
             AddCommand = new BasicCommand(this.AddQuestion);
-            DeleteCommand = new BasicCommand(this.DeleteQuestion);
+            DeleteCommand = new BasicCommand(this.DeleteQuestion, this.hasQuestions);
             ModifyCommand = new BasicCommand(this.ModifyQuestion);
-            SaveCommand = new BasicCommand(this.SaveQuiz);  
+            SaveCommand = new BasicCommand(this.SaveQuiz, this.hasQuestions);  
             LoadCommand = new BasicCommand(this.LoadQuiz);
+        }
+
+        private bool hasQuestions(object ingorethis)
+        {
+            return quiz.Questions.Count > 0;
         }
 
         private void UpdateQuestionNumbers()
@@ -95,13 +100,16 @@ namespace QuizCreator
 
         private void SaveQuiz(object ignorethis)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.CheckFileExists = false;
-            openFileDialog.FileName = $"{this.Quiz.Name}.sqlite";
-            if (openFileDialog.ShowDialog() != true)
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "sqlite|*.sqlite";
+            saveFileDialog.DefaultExt = "sqlite";
+            saveFileDialog.RestoreDirectory = true;
+
+            saveFileDialog.FileName = $"{this.Quiz.Name}.sqlite";
+            if (saveFileDialog.ShowDialog() != true)
                 return;
 
-            Model.DataBaseManager.SaveQuizToDB(Quiz, openFileDialog.FileName);
+            Model.DataBaseManager.SaveQuizToDB(Quiz, saveFileDialog.FileName);
         }
 
         private void LoadQuiz(object ignorethis)

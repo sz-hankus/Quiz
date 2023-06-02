@@ -4,13 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuizSolver"
-        mc:Ignorable="d"
+        x:Name="QuizViewWindow"
         Title="QuizView" Height="450" Width="800">
     <!--<Window.DataContext>
         <local:QuizViewVM/>
     </Window.DataContext>-->
 
     <Grid ShowGridLines="True">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80*"></ColumnDefinition>
             <ColumnDefinition Width="10*"></ColumnDefinition>
@@ -35,7 +36,7 @@
                         <DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
                             <TextBlock Text="{Binding Number}" Margin="0,0,5,0" VerticalAlignment="Center"></TextBlock>
                             <CheckBox IsChecked="{Binding Default}" Margin="0,0,5,0" DockPanel.Dock="Left" VerticalAlignment="Center"></CheckBox>
-                            <TextBox Text="{Binding Contents}" Width="Auto" VerticalAlignment="Center"></TextBox>
+                            <TextBox Text="{Binding Contents}" IsReadOnly="True" Width="Auto" VerticalAlignment="Center"></TextBox>
                         </DockPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -50,7 +51,7 @@
             <StackPanel Grid.Row="1" VerticalAlignment="Center">
                 <Button Content="Next" Grid.Column="2" Command="{Binding NextCommand}" HorizontalAlignment="Center" Margin="5"/>
                 <Button Content="Previous" Grid.Column="2" Command="{Binding PreviousCommand}" HorizontalAlignment="Center" Margin="5"/>
-                <Button Content="Finish" Grid.Column="2" Command="{Binding FinishCommand}" HorizontalAlignment="Center" Margin="5" Background="#FFFF1C1C" BorderBrush="Black" FontWeight="Bold"/>
+                <Button Content="Finish" Grid.Column="2" Command="{Binding FinishCommand, Mode=OneWay}" CommandParameter="{Binding ElementName=QuizViewWindow}" HorizontalAlignment="Center" Margin="5" Background="#FFFF1C1C" BorderBrush="Black" FontWeight="Bold"/>
             </StackPanel>
             <Label Content="Timer" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Margin="5" FontSize="24"/>
             <Label Content="{Binding Time}" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Margin="10,46.6,8,0" FontSize="24"/>
