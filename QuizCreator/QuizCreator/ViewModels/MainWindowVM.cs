@@ -6,6 +6,8 @@ using System.Windows.Input;
 using QuizCreator.Model;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System;
+using System.Diagnostics;
 
 namespace QuizCreator
 {
@@ -109,7 +111,26 @@ namespace QuizCreator
             if (saveFileDialog.ShowDialog() != true)
                 return;
 
-            Model.DataBaseManager.SaveQuizToDB(Quiz, saveFileDialog.FileName);
+            PasswordInputVM passwordInputVM = new PasswordInputVM();
+            PasswordInput passwordInput = new PasswordInput(passwordInputVM);
+            if (passwordInput.ShowDialog() != true)
+                return;
+
+            try
+            {
+                if (System.IO.File.Exists(saveFileDialog.FileName))
+                    Model.Cryptography.DecryptFile(saveFileDialog.FileName, passwordInputVM.Password);
+
+                Model.DataBaseManager.SaveQuizToDB(Quiz, saveFileDialog.FileName);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                Model.Cryptography.EncryptFile(saveFileDialog.FileName, passwordInputVM.Password);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine(ex);
+                MessageBox.Show($"Unable to save the quiz to {saveFileDialog.FileName}", "Saving error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void LoadQuiz(object ignorethis)
@@ -118,13 +139,23 @@ namespace QuizCreator
             openFileDialog.CheckFileExists = true;
             if (openFileDialog.ShowDialog() != true)
                 return;
+            
+            PasswordInputVM passwordInputVM = new PasswordInputVM();
+            PasswordInput passwordInput = new PasswordInput(passwordInputVM);
+            if (passwordInput.ShowDialog() != true)
+                return;
 
             try
             {
+                Model.Cryptography.DecryptFile(openFileDialog.FileName, passwordInputVM.Password);
                 Quiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                Model.Cryptography.EncryptFile(openFileDialog.FileName, passwordInputVM.Password);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
+                Debug.WriteLine(ex);
                 MessageBox.Show($"Unable to load a quiz from {openFileDialog.FileName}", "Loading error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

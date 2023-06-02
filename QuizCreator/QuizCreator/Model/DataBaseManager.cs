@@ -10,14 +10,6 @@ namespace QuizCreator.Model
 {
     public static class DataBaseManager
     {
-
-        static SQLiteConnection CreateConnection(String path)
-        {
-            SQLiteConnection sqlite_conn;
-            sqlite_conn = new SQLiteConnection($"Data Source={path};");
-            sqlite_conn.Open();
-            return sqlite_conn;
-        }
         private static int ExecuteNonQuery(SQLiteConnection sqlite_conn, String commandText) 
         {
             SQLiteCommand command = sqlite_conn.CreateCommand();

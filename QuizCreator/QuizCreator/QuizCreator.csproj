@@ -90,11 +90,20 @@
     </ApplicationDefinition>
     <Compile Include="BasicCommand.cs" />
     <Compile Include="Model\Answer.cs" />
+    <Compile Include="Model\Cryptography.cs" />
     <Compile Include="Model\DataBaseManager.cs" />
+    <Compile Include="ViewModels\PasswordInputVM.cs" />
+    <Compile Include="Views\PasswordInput.xaml.cs">
+      <DependentUpon>PasswordInput.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\QuestionWizard.xaml.cs">
       <DependentUpon>QuestionWizard.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\QuestionWizardVM.cs" />
+    <Page Include="Views\PasswordInput.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

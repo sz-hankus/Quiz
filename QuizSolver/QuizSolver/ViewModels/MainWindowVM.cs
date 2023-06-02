@@ -8,6 +8,8 @@ using System.Linq;
 using System.Windows.Input;
 using QuizSolver.Model;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System;
 
 namespace QuizSolver
 {
@@ -56,11 +58,28 @@ namespace QuizSolver
             if (openFileDialog.ShowDialog() != true)
                 return;
 
-            Model.Quiz loadedQuiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
+            PasswordInputVM passwordInputVM = new PasswordInputVM();
+            PasswordInput passwordInput = new PasswordInput(passwordInputVM);
+            if (passwordInput.ShowDialog() != true)
+                return;
 
-            QuizViewVM quizViewVM = new QuizViewVM(loadedQuiz);
-            QuizView quizView = new QuizView(quizViewVM);
-            quizView.Show();
+            try
+            {
+                Model.Cryptography.DecryptFile(openFileDialog.FileName, passwordInputVM.Password);
+                Quiz loadedQuiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                Model.Cryptography.EncryptFile(openFileDialog.FileName, passwordInputVM.Password);
+                
+                QuizViewVM quizViewVM = new QuizViewVM(loadedQuiz);
+                QuizView quizView = new QuizView(quizViewVM);
+                quizView.Show();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine(ex);
+                MessageBox.Show($"Unable to load a quiz from {openFileDialog.FileName}", "Loading error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void QuitApplication(object ignorethis)
