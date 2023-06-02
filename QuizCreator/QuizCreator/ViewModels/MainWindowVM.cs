@@ -6,7 +6,6 @@ using System.Windows.Input;
 using QuizCreator.Model;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System;
 using System.Diagnostics;
 
 namespace QuizCreator

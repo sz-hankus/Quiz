@@ -1,15 +1,12 @@
 ﻿using Microsoft.Win32;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using QuizSolver.Model;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System;
 
 namespace QuizSolver
 {
