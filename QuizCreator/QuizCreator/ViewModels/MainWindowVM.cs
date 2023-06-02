@@ -76,6 +76,11 @@ namespace QuizCreator
                 return;
             Quiz.Questions.RemoveAt((int)index);
             UpdateQuestionNumbers();
+            if (quiz.Questions.Count == 0)
+            {
+                quiz.Questions.Add(new Question(1, "New question", new ObservableCollection<Answer> { new Answer(1, "Correct answer", true), new Answer(2, "Incorrect answer", false) }));
+            }
+            UpdateQuestionNumbers();
         }
 
         private void ModifyQuestion(object index)
@@ -95,13 +100,16 @@ namespace QuizCreator
 
         private void SaveQuiz(object ignorethis)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.CheckFileExists = false;
-            openFileDialog.FileName = $"{this.Quiz.Name}.sqlite";
-            if (openFileDialog.ShowDialog() != true)
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "sqlite|*.sqlite";
+            saveFileDialog.DefaultExt = "sqlite";
+            saveFileDialog.RestoreDirectory = true;
+
+            saveFileDialog.FileName = $"{this.Quiz.Name}.sqlite";
+            if (saveFileDialog.ShowDialog() != true)
                 return;
 
-            Model.DataBaseManager.SaveQuizToDB(Quiz, openFileDialog.FileName);
+            Model.DataBaseManager.SaveQuizToDB(Quiz, saveFileDialog.FileName);
         }
 
         private void LoadQuiz(object ignorethis)
