@@ -93,9 +93,13 @@
     <Compile Include="Model\Cryptography.cs" />
     <Compile Include="Model\DataBaseManager.cs" />
     <Compile Include="ViewModels\PasswordInputVM.cs" />
+    <Compile Include="ViewModels\QuizReviewVM.cs" />
     <Compile Include="ViewModels\QuizViewVM.cs" />
     <Compile Include="Views\PasswordInput.xaml.cs">
       <DependentUpon>PasswordInput.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\QuizReview.xaml.cs">
+      <DependentUpon>QuizReview.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\QuizView.xaml.cs">
       <DependentUpon>QuizView.xaml</DependentUpon>
@@ -115,6 +119,10 @@
     <Page Include="Views\PasswordInput.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\QuizReview.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\QuizView.xaml">
       <SubType>Designer</SubType>

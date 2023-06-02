@@ -65,12 +65,20 @@ namespace QuizSolver
 
             try
             {
-                Model.Cryptography.DecryptFile(openFileDialog.FileName, passwordInputVM.Password);
-                Quiz loadedQuiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                Model.Cryptography.EncryptFile(openFileDialog.FileName, passwordInputVM.Password);
-                
+                Quiz loadedQuiz = new Quiz();
+                if (passwordInputVM.Password == "")
+                {
+                    loadedQuiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
+                }
+                else
+                {
+                    Model.Cryptography.DecryptFile(openFileDialog.FileName, passwordInputVM.Password);
+                    loadedQuiz = Model.DataBaseManager.ReadQuizFromDB(openFileDialog.FileName);
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    Model.Cryptography.EncryptFile(openFileDialog.FileName, passwordInputVM.Password);
+                }
+
                 QuizViewVM quizViewVM = new QuizViewVM(loadedQuiz);
                 QuizView quizView = new QuizView(quizViewVM);
                 quizView.Show();
