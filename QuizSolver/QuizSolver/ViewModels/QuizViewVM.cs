@@ -68,7 +68,7 @@ namespace QuizSolver
         {
             this.quiz = new Quiz("Test", new ObservableCollection<Question> { new Question(1, "test question", new ObservableCollection<Answer>() { new Answer(1, "test answer 1", true)}) });
             this.correctQuiz = quiz.Copy();
-            this.WipeAnswers();
+            this.Quiz.WipeAnswers();
             this.currentQuestion = Quiz.Questions[0];
             this.currentIndex = 0;
             NextCommand = new BasicCommand(GoToNextQuestion);
@@ -81,7 +81,7 @@ namespace QuizSolver
 
             this.quiz = quiz;
             this.correctQuiz = quiz.Copy();
-            this.WipeAnswers();
+            this.Quiz.WipeAnswers();
             this.currentQuestion = quiz.Questions[0];
             this.currentIndex = 0;
             NextCommand = new BasicCommand(GoToNextQuestion, IsNotAtEnd);
@@ -133,16 +133,6 @@ namespace QuizSolver
         private bool IsNotAtEnd(object ignorethis)
         {
             return currentIndex < Quiz.Questions.Count - 1;
-        }
-        private void WipeAnswers()
-        {
-            foreach (var question in this.quiz.Questions)
-            {
-                foreach (var asnwer in question.Answers)
-                {
-                    asnwer.Correct = false;
-                }
-            }
         }
     }
 }

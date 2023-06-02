@@ -82,5 +82,15 @@ namespace QuizSolver.Model
 			return correctAnswers;
         }
 
+		public void WipeAnswers()
+		{
+            foreach (var question in this.Questions)
+            {
+                foreach (var asnwer in question.Answers)
+                {
+                    asnwer.Correct = false;
+                }
+            }
+        }
 	}
 }
